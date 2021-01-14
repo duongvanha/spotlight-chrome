@@ -1,9 +1,9 @@
 {
-    "name": "chrome-extension-svelte-typescript-boilerplate",
+    "name": "splotlight",
     "version": "1.0.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/nekitcorp/chrome-extension-svelte-typescript-boilerplate.git"
+        "url": "https://github.com/duongvanha/spotlight-chrome"
     },
     "scripts": {
         "build": "rollup -c",
