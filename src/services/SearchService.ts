@@ -6,7 +6,7 @@ import plugins from "../plugins";
 
 function Search(keyword: string): AdapterPlugin[] {
     return fuzzaldrinPlus
-        .filter(plugins, keyword, {key: 'subtitle', maxResults: 5})
+        .filter(plugins, keyword, {key: 'subtitle', maxResults: 20})
         .map((matchedResult) => {
             matchedResult.textWithMatchedChars = fuzzaldrinPlus.wrap(matchedResult.subtitle, keyword)
             return matchedResult

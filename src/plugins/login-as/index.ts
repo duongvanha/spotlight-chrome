@@ -9,7 +9,7 @@ const LoginAsPlugin: AdapterPlugin = {
     title: 'Login as',
     subtitle: 'Login as to shop',
     icon: '',
-    hint: 'Login as -reason -shop_id(default current page)',
+    hint: 'Login as -reason -shop_id (default current page)',
     async action({browser}, [param1, param2]): Promise<string> {
         let shopId = param2;
         let reason = '';

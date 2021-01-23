@@ -14,7 +14,12 @@ export default class SuggestionService {
         let key = keys[0].trim();
         if (keys.length === 1) {
             const rs = Object.keys(this.state).find(i => i.startsWith(input)) || ''
-            if (rs === input && rs) return `${input} -`
+            if (rs === input && rs) {
+                if (this.state[key + '-']) {
+                    return `${input} -`
+                }
+                return input
+            }
             return rs;
         }
 
@@ -23,13 +28,21 @@ export default class SuggestionService {
         }
 
         if (!keys[keys.length - 1]) {
+            if (this.state[key]) {
+                return input + this.state[key][0];
+            }
             return '';
         }
 
         const search = keys[keys.length - 1];
         const rs = (this.state[key] || []).find(i => i.startsWith(search)) || ''
-        if (rs === search) return ''
-        return rs
+        if (rs === search && rs) {
+            if (this.state[key + '-']) {
+                return `${input} -`
+            }
+            return input
+        }
+        return input.substring(0, input.lastIndexOf(search)) + rs
     }
 
     commit(input: string) {

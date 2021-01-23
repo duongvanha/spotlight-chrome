@@ -21,16 +21,17 @@ describe('SuggestionService', function() {
   });
 
   it('should suggestion with params', function() {
-    suggestionService.commit('foo -bar -bar1');
-    suggestionService.commit('foo -ber');
+    suggestionService.commit('foo -bar -ber');
     expect(suggestionService.get('f')).toBe('foo');
     expect(suggestionService.get('foo')).toBe('foo -');
-    expect(suggestionService.get('foo -')).toBe('foo -ber');
-    expect(suggestionService.get('foo -bar')).toBe('foo -bar -');
-    expect(suggestionService.get('foo -bar -')).toBe('foo -bar -bar1');
-    expect(suggestionService.get('foo -bar -bar1')).toBe('foo -bar -bar1');
+    expect(suggestionService.get('foo -')).toBe('foo -bar');
+    expect(suggestionService.get('foo -b')).toBe('foo -bar');
     expect(suggestionService.get('foo -ba')).toBe('foo -bar');
-    expect(suggestionService.get('foo -b')).toBe('foo -ber');
+    expect(suggestionService.get('foo -bar')).toBe('foo -bar -');
+    expect(suggestionService.get('foo -bar -')).toBe('foo -bar -ber');
+    expect(suggestionService.get('foo -bar -b')).toBe('foo -bar -ber');
+    expect(suggestionService.get('foo -bar -be')).toBe('foo -bar -ber');
+    expect(suggestionService.get('foo -bar -ber')).toBe('foo -bar -ber');
   });
 
   it('test performance search', function() {
