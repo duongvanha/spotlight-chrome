@@ -1,29 +1,30 @@
 import axios from 'axios';
-import type AdapterPlugin from '../interface';
-import {sessIDHive, shopBaseInfo} from '../../services/shopBaseService';
 import * as querystring from 'querystring';
+import type AdapterPlugin from '../interface';
+import { sessIDHive, shopBaseInfo } from '../../services/shopBaseService';
 
 const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 const LoginAsPlugin: AdapterPlugin = {
+    id: 1,
     title: 'Login as',
     subtitle: 'Login as to shop',
     icon: '',
-    hint: 'Login as -shop_id or reason -reason(require nếu $1 là shop_id)',
+    hint: 'Login as -reason -shop_id(default current page)',
     async action({browser}, [param1, param2]): Promise<string> {
-        let shopId = 0;
+        let shopId = param2;
         let reason = '';
-        if (!isNaN(Number(param1))) {
-            shopId = Number(param1);
-            reason = param2;
-        } else {
+        if (shopId === null || shopId === "") {
             const shopData = await shopBaseInfo;
             shopId = shopData.bootstrap.shopId;
-            reason = param1;
         }
+
+        reason = param1;
+
+        if (!shopId) throw new Error('Cannot detect shop id');
 
         if (!reason) throw new Error('Reason cannot empty');
 
-        const sess = await sessIDHive;
+        const sess = await sessIDHive();
 
         const getUser = await axios.get(`https://hive.shopbase.com/admin/app/shop/${shopId}/show`, {
             headers: {
@@ -33,14 +34,14 @@ const LoginAsPlugin: AdapterPlugin = {
         });
 
         if (getUser.request.responseURL.endsWith('/admin/login')) {
-            await browser.tabs.create({url: getUser.request.responseURL});
+            await browser.tabs.create({url: getUser.request.responseURL + '?spotlight=' + LoginAsPlugin.id});
             return '';
         }
 
         const rs = getUser.data.match(regexUserId);
 
         if (!rs || !rs[1]) {
-            return '';
+            throw new Error('Cannot detect owner id');
         }
 
         const res = await axios.post(`https://hive.shopbase.com/admin/app/shopuser/${rs[1]}/login`, querystring.stringify({
@@ -52,7 +53,7 @@ const LoginAsPlugin: AdapterPlugin = {
             },
         }));
 
-        await browser.tabs.create({url: res.request.responseURL});
+        await browser.tabs.create({url: res.request.responseURL + '?spotlight=' + LoginAsPlugin.id});
         return '';
     },
 };

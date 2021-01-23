@@ -13,7 +13,7 @@ function createConfig(filename, useSvelte = false) {
         exclude: `src/test`,
         output: {
             format: "iife",
-            file: `public/build/${filename}.js`,
+            file: `public/${filename}.js`,
         },
         plugins: [
             useSvelte &&

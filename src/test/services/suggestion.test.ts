@@ -24,13 +24,13 @@ describe('SuggestionService', function() {
     suggestionService.commit('foo -bar -bar1');
     suggestionService.commit('foo -ber');
     expect(suggestionService.get('f')).toBe('foo');
-    expect(suggestionService.get('foo')).toBe('');
-    expect(suggestionService.get('foo -')).toBe('ber');
-    expect(suggestionService.get('foo -bar')).toBe('');
-    expect(suggestionService.get('foo -bar -')).toBe('bar1');
-    expect(suggestionService.get('foo -bar -bar1')).toBe('');
-    expect(suggestionService.get('foo -ba')).toBe('bar');
-    expect(suggestionService.get('foo -b')).toBe('ber');
+    expect(suggestionService.get('foo')).toBe('foo -');
+    expect(suggestionService.get('foo -')).toBe('foo -ber');
+    expect(suggestionService.get('foo -bar')).toBe('foo -bar -');
+    expect(suggestionService.get('foo -bar -')).toBe('foo -bar -bar1');
+    expect(suggestionService.get('foo -bar -bar1')).toBe('foo -bar -bar1');
+    expect(suggestionService.get('foo -ba')).toBe('foo -bar');
+    expect(suggestionService.get('foo -b')).toBe('foo -ber');
   });
 
   it('test performance search', function() {

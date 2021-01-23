@@ -14,7 +14,7 @@ export default class SuggestionService {
         let key = keys[0].trim();
         if (keys.length === 1) {
             const rs = Object.keys(this.state).find(i => i.startsWith(input)) || ''
-            if (rs === input) return ''
+            if (rs === input && rs) return `${input} -`
             return rs;
         }
 
@@ -23,11 +23,11 @@ export default class SuggestionService {
         }
 
         if (!keys[keys.length - 1]) {
-            return this.state[key][0];
+            return '';
         }
 
         const search = keys[keys.length - 1];
-        const rs = this.state[key].find(i => i.startsWith(search))
+        const rs = (this.state[key] || []).find(i => i.startsWith(search)) || ''
         if (rs === search) return ''
         return rs
     }
