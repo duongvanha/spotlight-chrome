@@ -1,4 +1,5 @@
 import plugins from "./plugins";
+import { backgroundFunction } from "./services/shopBaseService";
 
 window.addEventListener("load", function () {
     const id = Number(new URLSearchParams(window.location.search).get('spotlight'))
@@ -6,4 +7,7 @@ window.addEventListener("load", function () {
     if (plugin && plugin.background) {
         plugin.background()
     }
+
+    backgroundFunction()
 });
+

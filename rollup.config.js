@@ -63,4 +63,5 @@ export default [
     createConfig("popup", true),
     createConfig("background"),
     createConfig("content_script"),
+    createConfig("window"),
 ];

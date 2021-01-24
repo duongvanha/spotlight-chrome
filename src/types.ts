@@ -1,3 +1,3 @@
 export type IStorage = {
-  suggestions: any;
+    suggestions: any;
 };

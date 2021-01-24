@@ -1,13 +1,16 @@
 import { browser } from 'webextension-polyfill-ts';
 import axios from "axios";
+import type { ShopBaseStorage } from "../window";
 
-const shopBaseInfo = () => browser.tabs
-    .query({active: true, currentWindow: true})
-    .then(([currentTab]) =>
-        browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
-    ).then(([stateString]) => JSON.parse(stateString)).catch(err => {
-        console.log('shopBaseInfo', err);
-    });
+function shopBaseInfo(): Promise<ShopBaseStorage> {
+    return browser.tabs
+        .query({active: true, currentWindow: true})
+        .then(([currentTab]) =>
+            browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
+        ).then(([stateString]) => JSON.parse(stateString)).catch(err => {
+            console.log('shopBaseInfo', err);
+        })
+}
 
 
 const sessIDHive = async function () {
@@ -17,7 +20,7 @@ const sessIDHive = async function () {
     });
 };
 
-const regexUserId = /(.*hive.*.shopbase.\w{3}).*/;
+const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 
 async function getUserIdFromShopId(shopId: number): Promise<Number> {
     const getUser = await axios.get(`https://hive.shopbase.com/admin/app/shop/${shopId}/show`, {
@@ -28,7 +31,7 @@ async function getUserIdFromShopId(shopId: number): Promise<Number> {
     });
 
     const lastIndexUrlLogin = getUser.request.responseURL.lastIndexOf('/admin/login')
-    if (lastIndexUrlLogin) {
+    if (lastIndexUrlLogin !== -1) {
         const domain = getUser.request.responseURL.substr(0, lastIndexUrlLogin)
         await browser.tabs.create({url: `${domain}/connect/google`});
     }
@@ -41,4 +44,16 @@ async function getUserIdFromShopId(shopId: number): Promise<Number> {
     return rs[1]
 }
 
-export { shopBaseInfo, sessIDHive, getUserIdFromShopId };
+function injectScript(file, node) {
+    const th = document.getElementsByTagName(node)[0];
+    const scriptElement = document.createElement('script');
+    scriptElement.setAttribute('type', 'text/javascript');
+    scriptElement.setAttribute('src', file);
+    th.appendChild(scriptElement);
+}
+
+function backgroundFunction() {
+    injectScript(chrome.runtime.getURL('window.js'), 'body');
+}
+
+export { shopBaseInfo, sessIDHive, getUserIdFromShopId, backgroundFunction };

@@ -16,12 +16,15 @@
       ],
       "js": [
         "content_script.js"
-      ]
+      ],
+      "all_frames": true
     }
   ],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "web_accessible_resources": [{
+    "resources": ["/window.js"],
+    "matches": [],
+    "extension_ids": []
+  }],
   "action": {
     "default_popup": "popup.html"
   },

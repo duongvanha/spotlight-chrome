@@ -12,9 +12,9 @@ const LoginAsPlugin: AdapterPlugin = {
     async action({browser}, [param1, param2]): Promise<string> {
         let shopId: number;
         let reason = '';
-        if (param2 === null || param2 === "") {
+        if (!param2) {
             const shopData = await shopBaseInfo();
-            shopId = Number(shopData.bootstrap.shopId);
+            shopId = Number(shopData.shopId);
         } else {
             shopId = Number(param2)
         }
