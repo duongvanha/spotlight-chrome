@@ -1,9 +1,26 @@
+import { env } from "./types";
+
 export type ShopBaseStorage = {
     shopId: number
     productId: number
     host: string,
     userId: number,
+    env: env
 }
+
+function detectEnv(): env {
+    const host = window.location.host;
+    if (host.includes("stag.myshopbase.net") || host.includes(".sbasestag.tk")) {
+        return env.stag
+    }
+
+    if (host.includes(".myshopbase.net") || host.includes(".sbasedev.tk")) {
+        return env.dev
+    }
+
+    return env.prod
+}
+
 
 let objData: ShopBaseStorage = JSON.parse(localStorage.getItem('spotlight-ext-sbase') || '{}')
 let isShopBase = false
@@ -16,6 +33,7 @@ if (window?.__INITIAL_STATE__?.bootstrap?.shopId) {
         host: window.location.host,
         shopId: state.bootstrap.shopId,
         productId: state.customProduct.product.id,
+        env: detectEnv()
     }, objData)
 }
 // @ts-ignore
@@ -26,7 +44,8 @@ if (window?.app?.__vue__?.$store?.state?.shop) {
     objData = Object.assign({
         host: window.location.host,
         shopId: state.shop.shop.id,
-        userId: state.shop.shop.user_id
+        userId: state.shop.shop.user_id,
+        env: detectEnv()
     }, objData)
 }
 

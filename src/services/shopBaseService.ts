@@ -1,13 +1,31 @@
 import { browser } from 'webextension-polyfill-ts';
 import axios from "axios";
 import type { ShopBaseStorage } from "../window";
+import { env } from "../types";
+
+let shopBaseInfoCache = null
+
+const mapShopIdUserId = {}
+export const mapHiveEnv = {
+    [env.dev]: 'https://hive.dev.shopbase.net',
+    [env.stag]: 'https://hive.stag.shopbase.net',
+    [env.prod]: 'https://hive.shopbase.com',
+}
 
 function shopBaseInfo(): Promise<ShopBaseStorage> {
+    if (shopBaseInfoCache) return shopBaseInfoCache
     return browser.tabs
         .query({active: true, currentWindow: true})
         .then(([currentTab]) =>
             browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
-        ).then(([stateString]) => JSON.parse(stateString)).catch(err => {
+        ).then(([stateString]) => JSON.parse(stateString))
+        .then((info) => {
+            if (info.userId && info.shopId) {
+                mapShopIdUserId[info.shopId] = info.userId
+            }
+            shopBaseInfoCache = info
+            return info
+        }).catch(err => {
             console.log('shopBaseInfo', err);
         })
 }
@@ -15,7 +33,7 @@ function shopBaseInfo(): Promise<ShopBaseStorage> {
 
 const sessIDHive = async function () {
     return browser.cookies.get({
-        url: 'https://hive.shopbase.com',
+        url: mapHiveEnv[(await shopBaseInfo()).env],
         name: 'PHPSESSID',
     });
 };
@@ -23,7 +41,9 @@ const sessIDHive = async function () {
 const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 
 async function getUserIdFromShopId(shopId: number): Promise<Number> {
-    const getUser = await axios.get(`https://hive.shopbase.com/admin/app/shop/${shopId}/show`, {
+    if (mapShopIdUserId[shopId]) return mapShopIdUserId[shopId]
+    const linkHive = mapHiveEnv[(await shopBaseInfo()).env];
+    const getUser = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
         headers: {
             Cookie: `PHPSESSID=${await sessIDHive()}`,
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -41,6 +61,7 @@ async function getUserIdFromShopId(shopId: number): Promise<Number> {
     if (!rs || !rs[1]) {
         throw new Error('Cannot detect owner id');
     }
+    mapShopIdUserId[shopId] = rs[1]
     return rs[1]
 }
 
