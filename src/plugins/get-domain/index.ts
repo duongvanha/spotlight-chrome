@@ -44,7 +44,7 @@ const FindDomainPlugin: AdapterPlugin = {
 
         copyToClipboard(pubDomain)
 
-        return `PublicDomain:${pubDomain} ShopbaseDomain:${sbaseDomain}`
+        return `${pubDomain}\n${sbaseDomain}`
     },
 };
 
