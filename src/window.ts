@@ -1,24 +1,24 @@
-import { env } from "./types";
+import { Env } from "./types";
 
 export type ShopBaseStorage = {
     shopId: number
     productId: number
     host: string,
     userId: number,
-    env: env
+    env: Env
 }
 
-function detectEnv(): env {
+function detectEnv(): Env {
     const host = window.location.host;
     if (host.includes("stag.myshopbase.net") || host.includes(".sbasestag.tk")) {
-        return env.stag
+        return Env.stag
     }
 
     if (host.includes(".myshopbase.net") || host.includes(".sbasedev.tk")) {
-        return env.dev
+        return Env.dev
     }
 
-    return env.prod
+    return Env.prod
 }
 
 

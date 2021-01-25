@@ -1,15 +1,15 @@
 import { browser } from 'webextension-polyfill-ts';
 import axios from "axios";
 import type { ShopBaseStorage } from "../window";
-import { env } from "../types";
+import { Env } from "../types";
 
 let shopBaseInfoCache = null
 
 const mapShopIdUserId = {}
 export const mapHiveEnv = {
-    [env.dev]: 'https://hive.dev.shopbase.net',
-    [env.stag]: 'https://hive.stag.shopbase.net',
-    [env.prod]: 'https://hive.shopbase.com',
+    [Env.dev]: 'https://hive.dev.shopbase.net',
+    [Env.stag]: 'https://hive.stag.shopbase.net',
+    [Env.prod]: 'https://hive.shopbase.com',
 }
 
 function shopBaseInfo(): Promise<ShopBaseStorage> {
@@ -31,21 +31,21 @@ function shopBaseInfo(): Promise<ShopBaseStorage> {
 }
 
 
-const sessIDHive = async function () {
+const sessIDHive = async function (env) {
     return browser.cookies.get({
-        url: mapHiveEnv[(await shopBaseInfo()).env],
+        url: mapHiveEnv[env],
         name: 'PHPSESSID',
     });
 };
 
 const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 
-async function getUserIdFromShopId(shopId: number): Promise<Number> {
+async function getUserIdFromShopId(shopId: number, env): Promise<Number> {
     if (mapShopIdUserId[shopId]) return mapShopIdUserId[shopId]
-    const linkHive = mapHiveEnv[(await shopBaseInfo()).env];
+    const linkHive = mapHiveEnv[env];
     const getUser = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
         headers: {
-            Cookie: `PHPSESSID=${await sessIDHive()}`,
+            Cookie: `PHPSESSID=${await sessIDHive(env)}`,
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     });

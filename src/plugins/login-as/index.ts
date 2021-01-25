@@ -2,7 +2,12 @@ import axios from 'axios';
 import * as querystring from 'querystring';
 import type AdapterPlugin from '../interface';
 import { getUserIdFromShopId, mapHiveEnv, sessIDHive, shopBaseInfo } from '../../services/shopBaseService';
-import { browser } from "webextension-polyfill-ts";
+import { Env } from "../../types";
+
+const mapEnv = {
+    dev: Env.dev,
+    stag: Env.stag,
+}
 
 const LoginAsPlugin: AdapterPlugin = {
     id: 1,
@@ -10,9 +15,8 @@ const LoginAsPlugin: AdapterPlugin = {
     subtitle: 'Login as to shop',
     icon: '',
     hint: 'Login as -reason -shop_id (default current page)',
-    async action({browser}, [param1, param2]): Promise<string> {
+    async action({browser}, [reason, param2, envParams = 'prod']): Promise<string> {
         let shopId: number;
-        let reason = '';
         if (!param2) {
             const shopData = await shopBaseInfo();
             shopId = Number(shopData.shopId);
@@ -20,17 +24,21 @@ const LoginAsPlugin: AdapterPlugin = {
             shopId = Number(param2)
         }
 
-        reason = param1;
-
         if (!shopId) throw new Error('Cannot detect shop id');
 
         if (!reason) throw new Error('Reason cannot empty');
 
-        const sess = await sessIDHive();
+        let env = mapEnv[envParams]
 
-        const userId = await getUserIdFromShopId(shopId)
+        if (env === undefined || env === null) {
+            env = Env.prod
+        }
 
-        const linkHive = mapHiveEnv[(await shopBaseInfo()).env];
+        const sess = await sessIDHive(env);
+
+        const userId = await getUserIdFromShopId(shopId, env)
+
+        const linkHive = mapHiveEnv[env];
 
         const res = await axios.post(`${linkHive}/admin/app/shopuser/${userId}/login`, querystring.stringify({
             reason,
