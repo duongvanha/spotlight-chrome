@@ -1,21 +1,15 @@
 import axios from 'axios';
 import * as querystring from 'querystring';
 import type AdapterPlugin from '../interface';
-import { getUserIdFromShopId, mapHiveEnv, sessIDHive, shopBaseInfo } from '../../services/shopBaseService';
-import { Env } from "../../types";
-
-const mapEnv = {
-    dev: Env.dev,
-    stag: Env.stag,
-}
+import { detectEnv, getUserIdFromShopId, mapHiveEnv, sessIDHive, shopBaseInfo } from '../../services/shopBaseService';
 
 const LoginAsPlugin: AdapterPlugin = {
     id: 1,
     title: 'Login as',
     subtitle: 'Login as to shop',
-    icon: '',
+    icon: 'https://i.pinimg.com/originals/3a/69/ae/3a69ae3942d4a9da6c3cbc93b1c8f051.jpg',
     hint: 'Login as -reason -shop_id (default current page)',
-    async action({browser}, [reason, param2, envParams = 'prod']): Promise<string> {
+    async action({browser}, [reason, param2, envParams]): Promise<string> {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
@@ -28,11 +22,7 @@ const LoginAsPlugin: AdapterPlugin = {
 
         if (!reason) throw new Error('Reason cannot empty');
 
-        let env = mapEnv[envParams]
-
-        if (env === undefined || env === null) {
-            env = Env.prod
-        }
+        let env = await detectEnv(envParams)
 
         const sess = await sessIDHive(env);
 
@@ -56,7 +46,7 @@ const LoginAsPlugin: AdapterPlugin = {
             return ''
         }
 
-        await browser.tabs.create({url: res.request.responseURL + '?spotlight=' + LoginAsPlugin.id});
+        await browser.tabs.create({url: res.request.responseURL + 'spotlight=' + LoginAsPlugin.id});
         return '';
     },
 };

@@ -38,6 +38,27 @@ const sessIDHive = async function (env) {
     });
 };
 
+
+const mapEnv = {
+    dev: Env.dev,
+    stag: Env.stag,
+}
+
+export async function detectEnv(envParams): Promise<Env> {
+
+    let env = mapEnv[envParams]
+
+    if (!envParams) {
+        env = (await shopBaseInfo()).env
+    }
+
+    if (env === undefined || env === null) {
+        env = Env.prod
+    }
+
+    return env
+}
+
 const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 
 async function getUserIdFromShopId(shopId: number, env): Promise<Number> {
