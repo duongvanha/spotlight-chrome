@@ -30,7 +30,11 @@ const FindDomainPlugin: AdapterPlugin = {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        console.log(shopInfo);
+        const lastIndexUrlLogin = shopInfo.request.responseURL.lastIndexOf('/admin/login')
+        if (lastIndexUrlLogin !== -1) {
+            const domain = shopInfo.request.responseURL.substr(0, lastIndexUrlLogin)
+            await browser.tabs.create({url: `${domain}/connect/google`});
+        }
         let rs = publicDomain.exec(shopInfo.data)
         if (!rs || !rs[1]) {
             throw new Error('Cannot detect public domain');

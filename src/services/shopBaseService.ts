@@ -49,7 +49,10 @@ export async function detectEnv(envParams): Promise<Env> {
     let env = mapEnv[envParams]
 
     if (!envParams) {
-        env = (await shopBaseInfo()).env
+        const sbInfo = await shopBaseInfo()
+        if (sbInfo) {
+            env = sbInfo.env
+        }
     }
 
     if (env === undefined || env === null) {
@@ -61,7 +64,7 @@ export async function detectEnv(envParams): Promise<Env> {
 
 const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
 
-async function getUserIdFromShopId(shopId: number, env): Promise<Number> {
+async function getUserIdFromShopId(shopId: number, env): Promise<number> {
     if (mapShopIdUserId[shopId]) return mapShopIdUserId[shopId]
     const linkHive = mapHiveEnv[env];
     const getUser = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
