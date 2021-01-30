@@ -1,7 +1,13 @@
 import axios from 'axios';
 import * as querystring from 'querystring';
 import type AdapterPlugin from '../interface';
-import { detectEnv, getUserIdFromShopId, mapHiveEnv, sessIDHive, shopBaseInfo } from '../../services/shopBaseService';
+import {
+    detectEnv,
+    getShopBaseInfo,
+    mapHiveEnv,
+    sessIDHive,
+    shopBaseInfo
+} from '../../services/shopBaseService';
 
 const LoginAsPlugin: AdapterPlugin = {
     id: 1,
@@ -26,11 +32,11 @@ const LoginAsPlugin: AdapterPlugin = {
 
         const sess = await sessIDHive(env);
 
-        const userId = await getUserIdFromShopId(shopId, env)
+        const shopInfo = await getShopBaseInfo(shopId, env)
 
         const linkHive = mapHiveEnv[env];
 
-        const res = await axios.post(`${linkHive}/admin/app/shopuser/${userId}/login`, querystring.stringify({
+        const res = await axios.post(`${linkHive}/admin/app/shopuser/${shopInfo.ownerId}/login`, querystring.stringify({
             reason,
         }, {
             headers: {

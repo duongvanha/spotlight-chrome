@@ -1,5 +1,5 @@
 import type AdapterPlugin from '../interface';
-import { getUserIdFromShopId, shopBaseInfo } from "../../services/shopBaseService";
+import { getShopBaseInfo, shopBaseInfo } from "../../services/shopBaseService";
 import { copyToClipboard } from "../../services/Util";
 
 const CopyUserIdPlugin: AdapterPlugin = {
@@ -13,7 +13,7 @@ const CopyUserIdPlugin: AdapterPlugin = {
         let userId = shopData.userId
         if (!userId) {
             if (!shopData.shopId) throw new Error('Cannot detect shop id');
-            userId = await getUserIdFromShopId(shopData.shopId, shopData.env)
+            userId = (await getShopBaseInfo(shopData.shopId, shopData.env)).ownerId
         }
 
         copyToClipboard(userId)

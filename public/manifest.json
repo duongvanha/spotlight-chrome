@@ -20,11 +20,18 @@
       "all_frames": true
     }
   ],
-  "web_accessible_resources": [{
-    "resources": ["/window.js"],
-    "matches": [],
-    "extension_ids": []
-  }],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "/window.js"
+      ],
+      "matches": [],
+      "extension_ids": []
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html"
   },
@@ -34,7 +41,8 @@
     "tabs",
     "management",
     "storage",
-    "cookies"
+    "cookies",
+    "alarms"
   ],
   "host_permissions": [
     "*://*.shopbase.net/",

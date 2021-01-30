@@ -1,16 +1,37 @@
 import { browser } from 'webextension-polyfill-ts';
-import axios from "axios";
-import type { ShopBaseStorage } from "../window";
-import { Env } from "../types";
+import axios from 'axios';
+import type { ShopBaseStorage } from '../window';
+import { Env } from '../types';
+import { getCache, setCache } from "./Util";
 
 let shopBaseInfoCache = null
 
-const mapShopIdUserId = {}
+enum CacheKey {
+    shopInfo
+}
+
+export type ShopInfo = {
+    shopId: number
+    ownerId: number,
+    publicDomain: string,
+    shopBaseDomain: string,
+}
+
 export const mapHiveEnv = {
     [Env.dev]: 'https://hive.dev.shopbase.net',
     [Env.stag]: 'https://hive.stag.shopbase.net',
     [Env.prod]: 'https://hive.shopbase.com',
 }
+
+const mapEnv = {
+    dev: Env.dev,
+    stag: Env.stag,
+}
+
+const regexOwnerId = /.*\/shopuser\/(\d+)\/show.*/;
+const regexPublicDomain = /.*<th>Public Domain<\/th>\n<td>(.*)<\/td>.*/
+const regexShopBaseDomain = /.*<th>Domain<\/th>\n<td>(.*)<\/td>.*/
+
 
 function shopBaseInfo(): Promise<ShopBaseStorage> {
     if (shopBaseInfoCache) return shopBaseInfoCache
@@ -20,9 +41,6 @@ function shopBaseInfo(): Promise<ShopBaseStorage> {
             browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
         ).then(([stateString]) => JSON.parse(stateString))
         .then((info) => {
-            if (info.userId && info.shopId) {
-                mapShopIdUserId[info.shopId] = info.userId
-            }
             shopBaseInfoCache = info
             return info
         }).catch(err => {
@@ -30,18 +48,11 @@ function shopBaseInfo(): Promise<ShopBaseStorage> {
         })
 }
 
-
-const sessIDHive = async function (env) {
+async function sessIDHive(env) {
     return browser.cookies.get({
         url: mapHiveEnv[env],
         name: 'PHPSESSID',
     });
-};
-
-
-const mapEnv = {
-    dev: Env.dev,
-    stag: Env.stag,
 }
 
 export async function detectEnv(envParams): Promise<Env> {
@@ -62,31 +73,50 @@ export async function detectEnv(envParams): Promise<Env> {
     return env
 }
 
-const regexUserId = /.*\/shopuser\/(\d+)\/show.*/;
+async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
+    const cacheKey = `${CacheKey.shopInfo}${shopId}${env}`
+    const rs = await getCache(cacheKey)
 
-async function getUserIdFromShopId(shopId: number, env): Promise<number> {
-    if (mapShopIdUserId[shopId]) return mapShopIdUserId[shopId]
+    if (rs) return rs
+
     const linkHive = mapHiveEnv[env];
-    const getUser = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
+    const shopRes = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
         headers: {
             Cookie: `PHPSESSID=${await sessIDHive(env)}`,
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     });
 
-    const lastIndexUrlLogin = getUser.request.responseURL.lastIndexOf('/admin/login')
+    const lastIndexUrlLogin = shopRes.request.responseURL.lastIndexOf('/admin/login')
     if (lastIndexUrlLogin !== -1) {
-        const domain = getUser.request.responseURL.substr(0, lastIndexUrlLogin)
+        const domain = shopRes.request.responseURL.substr(0, lastIndexUrlLogin)
         await browser.tabs.create({url: `${domain}/connect/google`});
+        return null
     }
 
-    const rs = getUser.data.match(regexUserId);
-
-    if (!rs || !rs[1]) {
-        throw new Error('Cannot detect owner id');
+    let publicDomainRex = regexPublicDomain.exec(shopRes.data)
+    if (!publicDomainRex || !publicDomainRex[1]) {
+        throw new Error('Cannot detect public domain');
     }
-    mapShopIdUserId[shopId] = rs[1]
-    return rs[1]
+    let ownerIdRex = regexOwnerId.exec(shopRes.data)
+    if (!ownerIdRex || !ownerIdRex[1]) {
+        throw Error('Cannot detect owner id');
+    }
+    let shopBaseDomainRex = regexShopBaseDomain.exec(shopRes.data)
+    if (!shopBaseDomainRex || !shopBaseDomainRex[1]) {
+        throw new Error('Cannot detect public domain');
+    }
+
+    const shopInfo = {
+        publicDomain: publicDomainRex[1],
+        ownerId: +ownerIdRex[1],
+        shopBaseDomain: shopBaseDomainRex[1],
+        shopId: shopId
+    }
+
+    setCache(cacheKey, shopInfo)
+
+    return shopInfo
 }
 
 function injectScript(file, node) {
@@ -101,4 +131,4 @@ function backgroundFunction() {
     injectScript(chrome.runtime.getURL('window.js'), 'body');
 }
 
-export { shopBaseInfo, sessIDHive, getUserIdFromShopId, backgroundFunction };
+export { shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo };

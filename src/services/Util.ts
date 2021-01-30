@@ -7,3 +7,23 @@ export function copyToClipboard(value) {
     }, {once: true})
     document.execCommand('copy');
 }
+
+export async function setCache(key, value) {
+    return new Promise((resolve, reject) => {
+
+        chrome.runtime.sendMessage({key, value, type: "setCache"}, function (response) {
+            console.log(response);
+            resolve(response)
+        });
+    })
+}
+
+export async function getCache(key): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+        chrome.runtime.sendMessage({key, type: "getCache"}, function (response) {
+            console.log(response);
+            resolve(response)
+        });
+    })
+}
