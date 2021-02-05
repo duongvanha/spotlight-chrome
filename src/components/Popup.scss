@@ -79,15 +79,19 @@
 
 .cLauncher .cLauncher__hint {
   padding: 0 5px 5px 15px;
+
   p {
     margin: 0;
     padding: 0;
+
     &.error {
       color: red;
     }
+
     &.result {
       color: blue;
     }
+
     &.hint {
       color: #79827a;
     }
@@ -102,7 +106,8 @@
 .cLauncher .cLauncher__suggestion {
   display: flex;
   align-items: center;
-  padding: 10px 10px 10px 20px;
+  padding: 0 10px;
+  border-top: 1px solid;
   list-style: none;
   height: 60px;
 }
@@ -111,16 +116,10 @@
   background-color: var(--selected-suggestion-background-color);
 }
 
-.cLauncher .cLauncher__suggestion.selected .cLauncher__suggestion-title {
-  color: var(--selected-suggestion-title-text-color);
-}
-
-.cLauncher .cLauncher__suggestion.selected .cLauncher__suggestion-subtitle {
-  color: var(--selected-suggestion-subtitle-text-color);
-}
-
-.cLauncher .cLauncher__suggestion.selected strong {
-  color: var(--selected-suggestion-character-match-color);
+.cLauncher .cLauncher__suggestion.selected {
+  .cLauncher__suggestion-title, .cLauncher__suggestion-subtitle, strong, .cLauncher__suggestion-icon {
+    color: var(--selected-suggestion-title-text-color);
+  }
 }
 
 .cLauncher .cLauncher__suggestion.loading:after {
@@ -136,7 +135,7 @@
 }
 
 .cLauncher .cLauncher__suggestion .cLauncher__suggestion-icon {
-  width: 20px;
+  font-size: 30px;
   margin-right: 10px;
 }
 

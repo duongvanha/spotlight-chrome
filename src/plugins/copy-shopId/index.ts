@@ -6,7 +6,7 @@ const CopyShopIdPlugin: AdapterPlugin = {
     id: 3,
     title: 'Copy shopId',
     subtitle: 'Show and copy shopId to clipboard',
-    icon: '',
+    icon: 'mdi-shopping',
     hint: 'Copy shopId',
     async action(): Promise<string> {
         const shopData = await shopBaseInfo();

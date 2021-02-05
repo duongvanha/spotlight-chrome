@@ -112,7 +112,7 @@
                         class:selected={pluginSelected && pluginSelected === plugin}
                         class:loading={loading}
                     >
-                        <img class="cLauncher__suggestion-icon" src={plugin.icon}/>
+                        <span class={`cLauncher__suggestion-icon mdi ${plugin.icon}`}></span>
                         <div class="cLauncher__suggestion-title-info">
                             <div class="cLauncher__suggestion-title dont-break-out">
                                 {plugin.title}

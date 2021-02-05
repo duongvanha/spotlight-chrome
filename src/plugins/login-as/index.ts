@@ -13,7 +13,7 @@ const LoginAsPlugin: AdapterPlugin = {
     id: 1,
     title: 'Login as',
     subtitle: 'Login as to shop',
-    icon: 'https://i.pinimg.com/originals/3a/69/ae/3a69ae3942d4a9da6c3cbc93b1c8f051.jpg',
+    icon: 'mdi-login',
     hint: 'Login as -reason -shop_id (default current page)',
     async action({browser}, [reason, param2, envParams]): Promise<string> {
         let shopId: number;
