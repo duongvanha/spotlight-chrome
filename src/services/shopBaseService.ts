@@ -2,7 +2,7 @@ import { browser } from 'webextension-polyfill-ts';
 import axios from 'axios';
 import type { ShopBaseStorage } from '../window';
 import { Env } from '../types';
-import { getCache, setCache } from "./Util";
+import { getCache, keepSession, setCache } from "./Util";
 
 let shopBaseInfoCache = null
 
@@ -44,7 +44,7 @@ function shopBaseInfo(): Promise<ShopBaseStorage> {
             shopBaseInfoCache = info
             return info
         }).catch(err => {
-            console.log('shopBaseInfo', err);
+            console.log('shopBaseInfo', err.message);
         })
 }
 
@@ -80,9 +80,10 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     if (rs) return rs
 
     const linkHive = mapHiveEnv[env];
+    const session = await sessIDHive(env)
     const shopRes = await axios.get(`${linkHive}/admin/app/shop/${shopId}/show`, {
         headers: {
-            Cookie: `PHPSESSID=${await sessIDHive(env)}`,
+            Cookie: `PHPSESSID=${session}`,
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     });
@@ -90,7 +91,7 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     const lastIndexUrlLogin = shopRes.request.responseURL.lastIndexOf('/admin/login')
     if (lastIndexUrlLogin !== -1) {
         const domain = shopRes.request.responseURL.substr(0, lastIndexUrlLogin)
-        await browser.tabs.create({url: `${domain}/connect/google`});
+        await browser.tabs.create({url: `${domain}/connect/google`, active: false});
         return null
     }
 
@@ -115,6 +116,7 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     }
 
     setCache(cacheKey, shopInfo)
+    keepSession(session)
 
     return shopInfo
 }

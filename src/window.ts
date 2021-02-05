@@ -22,7 +22,12 @@ function detectEnv(): Env {
 }
 
 
-let objData: ShopBaseStorage = JSON.parse(localStorage.getItem('spotlight-ext-sbase') || '{}')
+let objData: ShopBaseStorage = {} as ShopBaseStorage
+try {
+    JSON.parse(localStorage.getItem('spotlight-ext-sbase') || '{}')
+} catch (e) {
+    console.error(e)
+}
 let isShopBase = false
 // @ts-ignore
 if (window?.__INITIAL_STATE__?.bootstrap?.shopId) {

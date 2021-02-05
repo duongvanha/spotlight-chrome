@@ -9,21 +9,24 @@ export function copyToClipboard(value) {
 }
 
 export async function setCache(key, value) {
-    return new Promise((resolve, reject) => {
+    chrome.storage.local.set({[key]: value})
+    return value
+}
 
-        chrome.runtime.sendMessage({key, value, type: "setCache"}, function (response) {
-            console.log(response);
-            resolve(response)
+export async function keepSession(key) {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['_isKeepSession'], ({_isKeepSession}) => {
+            chrome.storage.local.set({_isKeepSession: true, _userId: key});
+            !_isKeepSession && chrome.alarms.create({delayInMinutes: 5});
+            resolve('done')
         });
     })
 }
 
 export async function getCache(key): Promise<any> {
-    return new Promise((resolve, reject) => {
-
-        chrome.runtime.sendMessage({key, type: "getCache"}, function (response) {
-            console.log(response);
-            resolve(response)
+    return new Promise((resolve) => {
+        chrome.storage.local.get([key], (mapData) => {
+            resolve(mapData[key])
         });
     })
 }

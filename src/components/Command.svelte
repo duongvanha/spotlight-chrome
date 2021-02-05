@@ -48,7 +48,9 @@
         loading = false
     }
 
-    const eventsAccepted = new Set(['Enter', 'Tab'])
+    const eventsAccepted = new Set(['Enter', 'Tab', 'ArrowDown', 'ArrowUp'])
+
+    document.addEventListener('keydown', handleKeyup);
 
     function handleKeyup(event) {
         if (!eventsAccepted.has(event.code)) return
@@ -63,6 +65,17 @@
                 } else if (pluginSelected && pluginSelected.title.length > keyword.length) {
                     keyword = pluginSelected.title
                 }
+                break
+            }
+            case 'ArrowUp': {
+                const index = plugins.indexOf(pluginSelected)
+                pluginSelected = plugins[index - 1] || plugins[plugins.length - 1]
+                break
+            }
+            case 'ArrowDown': {
+                const index = plugins.indexOf(pluginSelected)
+                pluginSelected = plugins[index + 1] || plugins[0]
+                break
             }
         }
     }
@@ -75,7 +88,7 @@
 <div class='static-cLauncher cLauncher'>
     <div class='cLauncher__search-wrapper'>
         <div class="cLauncher__search-input-wrapper">
-            <input type='text' class='cLauncher__search' bind:value={keyword} autofocus on:keydown={handleKeyup}
+            <input type='text' class='cLauncher__search' bind:value={keyword} autofocus
                    placeholder="{suggestions ? '' : 'Enter Your Command'}"/>
             {#if suggestions}
                 <input type='text' class="cLauncher__search suggestion" disabled value={suggestions}>
@@ -96,7 +109,7 @@
             <ul class='cLauncher__suggestions cLauncher__scrollbar'>
                 {#each plugins as plugin}
                     <li class='cLauncher__suggestion'
-                        class:selected={pluginSelected && pluginSelected.id === plugin.id}
+                        class:selected={pluginSelected && pluginSelected === plugin}
                         class:loading={loading}
                     >
                         <img class="cLauncher__suggestion-icon" src={plugin.icon}/>
