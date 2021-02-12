@@ -4,10 +4,10 @@ import { copyToClipboard } from "../../services/Util";
 
 const CopyUserIdPlugin: AdapterPlugin = {
     id: 4,
-    title: 'Copy userId',
-    subtitle: 'Show and copy userId to clipboard',
+    title: 'Copy user id',
+    subtitle: 'Show and copy user id to clipboard',
     icon: 'mdi-account-settings',
-    hint: 'Copy userId',
+    hint: 'Copy user id',
     async action(): Promise<string> {
         const shopData = await shopBaseInfo();
         let userId = shopData.userId

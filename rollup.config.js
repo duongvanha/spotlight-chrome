@@ -59,7 +59,7 @@ function createConfig(filename, useSvelte = false) {
 }
 
 export default [
-    createConfig("options", true),
+    // createConfig("options", true),
     createConfig("popup", true),
     createConfig("background"),
     createConfig("content_script"),

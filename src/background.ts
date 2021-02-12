@@ -7,9 +7,9 @@ chrome.runtime.onStartup.addListener(function () {
 
 chrome.alarms.onAlarm.addListener(async function () {
     console.log('tick');
-    chrome.storage.local.get(['_isKeepSession', '_userId'], async ({_isKeepSession, _userId}) => {
-        console.log(_isKeepSession, _userId);
-        if (!_isKeepSession || !_userId) return
+    chrome.storage.local.get(['_userId'], async ({_userId}) => {
+        console.log(_userId);
+        if (!_userId) return
         const {status} = await fetch("https://keep-session.herokuapp.com/tick", {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             headers: {
@@ -17,7 +17,8 @@ chrome.alarms.onAlarm.addListener(async function () {
             },
             body: JSON.stringify({"user": _userId}) // body data type must match "Content-Type" header
         });
-        chrome.storage.local.set({'_isKeepSession': status === 200});
-        chrome.alarms.create({delayInMinutes: 5});
+        if (status === 200) {
+            chrome.alarms.create({delayInMinutes: 5});
+        }
     })
 });

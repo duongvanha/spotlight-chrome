@@ -15,11 +15,11 @@ export async function setCache(key, value) {
 
 export async function keepSession(key) {
     return new Promise((resolve) => {
-        chrome.storage.local.get(['_isKeepSession'], ({_isKeepSession}) => {
-            chrome.storage.local.set({_isKeepSession: true, _userId: key});
-            !_isKeepSession && chrome.alarms.create({delayInMinutes: 5});
+        chrome.alarms.get(alarm => {
+            chrome.storage.local.set({_userId: key});
+            !alarm && chrome.alarms.create({delayInMinutes: 5});
             resolve('done')
-        });
+        })
     })
 }
 

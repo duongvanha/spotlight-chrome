@@ -12,7 +12,7 @@ import {
 const LoginAsPlugin: AdapterPlugin = {
     id: 1,
     title: 'Login as',
-    subtitle: 'Login as to shop',
+    subtitle: 'Login as current shop',
     icon: 'mdi-login',
     hint: 'Login as -reason -shop_id (default current page)',
     async action({browser}, [reason, param2, envParams]): Promise<string> {
@@ -52,7 +52,7 @@ const LoginAsPlugin: AdapterPlugin = {
             return ''
         }
 
-        await browser.tabs.create({url: res.request.responseURL + 'spotlight=' + LoginAsPlugin.id});
+        browser.tabs.create({url: res.request.responseURL + 'spotlight=' + LoginAsPlugin.id});
         return '';
     },
 };

@@ -4,10 +4,10 @@ import { copyToClipboard } from "../../services/Util";
 
 const CopyShopIdPlugin: AdapterPlugin = {
     id: 3,
-    title: 'Copy shopId',
-    subtitle: 'Show and copy shopId to clipboard',
+    title: 'Copy shop id',
+    subtitle: 'Show and copy shop id to clipboard',
     icon: 'mdi-shopping',
-    hint: 'Copy shopId',
+    hint: 'Copy shop id',
     async action(): Promise<string> {
         const shopData = await shopBaseInfo();
         if (!shopData.shopId) throw new Error('Cannot detect shop id');

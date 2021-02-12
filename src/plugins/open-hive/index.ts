@@ -1,21 +1,17 @@
-import axios from 'axios';
-import * as querystring from 'querystring';
 import type AdapterPlugin from '../interface';
 import {
     detectEnv,
-    getShopBaseInfo,
     mapHiveEnv,
-    sessIDHive,
     shopBaseInfo
 } from '../../services/shopBaseService';
 
 const OpenHivePlugin: AdapterPlugin = {
     id: 5,
     title: 'Open Hive',
-    subtitle: 'Open hive shop info',
+    subtitle: 'Open hive store info',
     icon: 'mdi-storefront',
     hint: 'Open Hive -shop_id (default current page)',
-    async action({browser}, [reason, param2, envParams]): Promise<string> {
+    async action({browser}, [param2, envParams]): Promise<string> {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
@@ -25,8 +21,6 @@ const OpenHivePlugin: AdapterPlugin = {
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');
-
-        if (!reason) throw new Error('Reason cannot empty');
 
         const linkHive = mapHiveEnv[await detectEnv(envParams)];
 

@@ -34,7 +34,7 @@ describe('SuggestionService', function() {
     expect(suggestionService.get('foo -bar -ber')).toBe('foo -bar -ber');
   });
 
-  it('test performance search', function() {
+  it('1000 results should be less than 10ms', function() {
     suggestionService.commit('foo -bar -bar1');
     suggestionService.commit('foo -ber');
     const start = performance.now();
@@ -45,7 +45,7 @@ describe('SuggestionService', function() {
     expect(end - start).toBeLessThan(10);
   });
 
-  it('should restore state with', function() {
+  it('should get and set the state', function() {
     suggestionService.commit('foo');
     const otherSrv = new SuggestionService();
     otherSrv.setState(suggestionService.getState());

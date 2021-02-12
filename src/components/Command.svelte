@@ -24,6 +24,9 @@
     $: {
         error = null
         suggestions = suggestionService.get(keyword);
+        if (keyword.startsWith(suggestions)) {
+            suggestions = ''
+        }
         const keywordSearch = keyword.split('-')
         plugins = Search(keywordSearch.length > 0 ? keywordSearch[0] : keyword)
         if (plugins.length > 0) {
@@ -41,7 +44,7 @@
             const [_, ...params] = keyword.split('-').map(i => i.trim())
             message = await execute(pluginSelected, ...params)
             suggestionService.commit(keyword)
-            setSuggestions(suggestionService.getState())
+            await setSuggestions(suggestionService.getState())
         } catch (e) {
             error = e
         }

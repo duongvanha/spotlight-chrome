@@ -7,6 +7,11 @@
         "sourceMap": false,
         "isolatedModules": false,
         "typeRoots": ["node_modules/@types"],
-        "types": ["svelte", "chrome", "jest"]
+        "types": ["svelte", "chrome", "jest"],
+      "lib": [
+        "es2017",
+        "dom",
+        "webworker"
+      ]
     }
 }
