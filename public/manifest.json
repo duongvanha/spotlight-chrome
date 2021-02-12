@@ -37,9 +37,7 @@
   },
   "permissions": [
     "activeTab",
-    "bookmarks",
     "tabs",
-    "management",
     "storage",
     "cookies",
     "alarms"
