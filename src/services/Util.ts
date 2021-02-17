@@ -14,7 +14,7 @@ export async function setCache(key, value) {
 }
 
 export function parseShopId(shopId: any): number {
-    return Number(shopId.toString().replace(',',''))
+    return Number(shopId.toString().replaceAll(',',''))
 }
 
 export async function keepSession(key) {
