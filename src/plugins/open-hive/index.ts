@@ -4,6 +4,7 @@ import {
     mapHiveEnv,
     shopBaseInfo
 } from '../../services/shopBaseService';
+import { parseShopId } from "../../services/Util";
 
 const OpenHivePlugin: AdapterPlugin = {
     id: 5,
@@ -15,9 +16,9 @@ const OpenHivePlugin: AdapterPlugin = {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
-            shopId = Number(shopData.shopId);
+            shopId = parseShopId(shopData.shopId);
         } else {
-            shopId = Number(param2)
+            shopId = parseShopId(param2)
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');

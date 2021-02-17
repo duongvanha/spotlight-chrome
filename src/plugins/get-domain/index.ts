@@ -1,6 +1,6 @@
 import type AdapterPlugin from '../interface';
 import { detectEnv, getShopBaseInfo, shopBaseInfo } from "../../services/shopBaseService";
-import { copyToClipboard } from "../../services/Util";
+import { copyToClipboard, parseShopId } from "../../services/Util";
 
 const FindDomainPlugin: AdapterPlugin = {
     id: 2,
@@ -12,9 +12,9 @@ const FindDomainPlugin: AdapterPlugin = {
         let shopId: number;
         if (!param) {
             const shopData = await shopBaseInfo();
-            shopId = Number(shopData.shopId);
+            shopId = parseShopId(shopData.shopId);
         } else {
-            shopId = Number(param)
+            shopId = parseShopId(param)
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');

@@ -8,6 +8,7 @@ import {
     sessIDHive,
     shopBaseInfo
 } from '../../services/shopBaseService';
+import { parseShopId } from "../../services/Util";
 
 const LoginAsPlugin: AdapterPlugin = {
     id: 1,
@@ -19,9 +20,9 @@ const LoginAsPlugin: AdapterPlugin = {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
-            shopId = Number(shopData.shopId);
+            shopId = parseShopId(shopData.shopId);
         } else {
-            shopId = Number(param2)
+            shopId = parseShopId(param2)
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');

@@ -13,6 +13,10 @@ export async function setCache(key, value) {
     return value
 }
 
+export function parseShopId(shopId: any): number {
+    return Number(shopId.toString().replace(',',''))
+}
+
 export async function keepSession(key) {
     return new Promise((resolve) => {
         chrome.alarms.get(alarm => {
