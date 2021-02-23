@@ -83,6 +83,9 @@
         }
     }
 </script>
+<style lang='sass'>
+  @import "Popup"
+</style>
 <div style="flex: 1 1 0; overflow: hidden; display: flex; flex-direction: column;">
     <div style="display: flex; align-items: center; border: none; padding: 0 16px; width: 100%; background: transparent; font-size: 18px; line-height: inherit; height: 52px; flex-grow: 0; flex-shrink: 0; z-index: 1; box-shadow: rgba(55, 53, 47, 0.09) 0 1px 0;">
         <svg viewBox="0 0 17 17"
@@ -123,8 +126,7 @@
         <section style="flex: 1 1 0%; display: flex; flex-direction: column; overflow: auto; height: 100%;">
             {#each plugins as plugin}
                 <div class:selected={pluginSelected && pluginSelected === plugin}
-                     class:loading={loading} role="button"
-                     style="user-select: none; transition: none 0s ease 0s; cursor: pointer; width: 100%;">
+                     class:loading={loading} role="button" class="plugin">
                     <div style="display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 36px; font-size: 14px; padding-top: 8px; padding-bottom: 8px; box-shadow: rgba(55, 53, 47, 0.06) 0px 1px 0px;">
                         <div style="display: flex; align-items: center; justify-content: center; margin-left: 14px; margin-top: 1px; align-self: flex-start;">
                             <div role="button" aria-disabled="true"
@@ -152,9 +154,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-left: auto; margin-right: 14px; min-width: 0px; flex: 0 0 auto; align-self: flex-start; margin-top: 3px;">
-                            <svg viewBox="0 0 14 12"
-                                 style="width: 14px; height: 14px; display: block; fill: rgba(55, 53, 47, 0.4); flex-shrink: 0; backface-visibility: hidden; opacity: 0;">
+                        <div class="icon-enter">
+                            <svg viewBox="0 0 14 12">
                                 <path d="M4.45869 11.0605C4.83955 11.0605 5.09736 10.791 5.09736 10.4219C5.09736 10.2285 5.02119 10.0879 4.904 9.9707L3.41572 8.51758L2.39033 7.65625L3.74384 7.71484H11.0563C12.527 7.71484 13.154 7.05273 13.154 5.59961V2.125C13.154 0.654297 12.527 0.0214844 11.0563 0.0214844H7.80439C7.41181 0.0214844 7.13642 0.314453 7.13642 0.677734C7.13642 1.03516 7.41181 1.32812 7.79853 1.32812H11.027C11.613 1.32812 11.8649 1.58008 11.8649 2.16602V5.55859C11.8649 6.16211 11.613 6.4082 11.027 6.4082H3.74384L2.39033 6.47266L3.41572 5.60547L4.904 4.1582C5.02119 4.04102 5.09736 3.89453 5.09736 3.70117C5.09736 3.33789 4.83955 3.06836 4.45869 3.06836C4.29462 3.06836 4.11298 3.14453 3.98408 3.27344L0.626656 6.57812C0.49189 6.70703 0.421577 6.88281 0.421577 7.06445C0.421577 7.24023 0.49189 7.41602 0.626656 7.54492L3.98408 10.8555C4.11298 10.9844 4.29462 11.0605 4.45869 11.0605Z"></path>
                             </svg>
                         </div>

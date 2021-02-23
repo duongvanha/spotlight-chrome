@@ -10,7 +10,7 @@ const OpenHivePlugin: AdapterPlugin = {
     id: 5,
     title: 'Open Hive',
     subtitle: 'Open hive store info',
-    icon: 'mdi-storefront',
+    icon: '🤖',
     hint: 'Open Hive -shop_id (default current page)',
     async action({browser}, [param2, envParams]): Promise<string> {
         let shopId: number;

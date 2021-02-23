@@ -6,7 +6,7 @@ const CopyUserIdPlugin: AdapterPlugin = {
     id: 4,
     title: 'Copy user id',
     subtitle: 'Show and copy user id to clipboard',
-    icon: 'mdi-account-settings',
+    icon: '🤖',
     hint: 'Copy user id',
     async action(): Promise<string> {
         const shopData = await shopBaseInfo();

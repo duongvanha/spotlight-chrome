@@ -1,0 +1,34 @@
+.plugin {
+  user-select: none;
+  transition: none 0s ease 0s;
+  cursor: pointer;
+  width: 100%;
+
+  .icon-enter {
+    margin-left: auto;
+    margin-right: 14px;
+    min-width: 0;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin-top: 3px;
+
+    & > svg {
+      opacity: 0;
+      width: 14px;
+      height: 14px;
+      display: block;
+      fill: rgba(55, 53, 47, 0.4);
+      flex-shrink: 0;
+      backface-visibility: hidden
+    }
+  }
+
+  &.selected {
+    background: rgba(55, 53, 47, 0.08);
+
+    .icon-enter > svg {
+      opacity: 1;
+
+    }
+  }
+}
