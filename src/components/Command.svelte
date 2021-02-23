@@ -86,7 +86,7 @@
 <style lang='sass'>
   @import "Popup"
 </style>
-<div style="flex: 1 1 0; overflow: hidden; display: flex; flex-direction: column;">
+<div style="flex: 1 1 0; overflow: hidden; display: flex; flex-direction: column; min-width: 350px">
     <div style="position: relative;display: flex; align-items: center; border: none; padding: 0 16px; width: 100%; background: transparent; font-size: 18px; line-height: inherit; height: 52px; flex-grow: 0; flex-shrink: 0; z-index: 1; box-shadow: rgba(55, 53, 47, 0.09) 0 1px 0;">
         <svg viewBox="0 0 17 17"
              style="width: 18px; height: 18px; display: block; fill: rgba(55, 53, 47, 0.4); flex-shrink: 0; backface-visibility: hidden; margin-right: 10px; flex-grow: 0;">
@@ -105,25 +105,56 @@
             </svg>
         </div>
     </div>
-    <div style="display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 0; font-size: 14px; box-shadow: rgba(55, 53, 47, 0.06) 0px 1px 0px;">
-        <div style="margin-left: 14px; margin-right: 14px; min-width: 0;">
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                <div style="display: flex; align-items: center; height: 32px;">
-                    <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
-                        Sort:
-                    </div>
-                    <div role="button"
-                         style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
-                        <div style="color: rgba(55, 53, 47, 0.6);">Best matches</div>
-                        <svg viewBox="0 0 30 30"
-                             style="width: 10px; height: 100%; display: block; fill: rgba(55, 53, 47, 0.3); flex-shrink: 0; backface-visibility: hidden; margin-left: 4px;">
-                            <polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon>
-                        </svg>
+    {#if error != null}
+        <div style="display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 0; font-size: 14px; box-shadow: rgba(55, 53, 47, 0.06) 0px 1px 0px;">
+            <div style="margin-left: 14px; margin-right: 14px; min-width: 0;">
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <div style="display: flex; align-items: center; height: 32px;">
+                        <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
+                            Error:
+                        </div>
+                        <div role="button"
+                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
+                            <div style="color: rgba(55, 53, 47, 0.6);">{error.message}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {:else if message}
+        <div style="display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 0; font-size: 14px; box-shadow: rgba(55, 53, 47, 0.06) 0px 1px 0px;">
+            <div style="margin-left: 14px; margin-right: 14px; min-width: 0;">
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <div style="display: flex; align-items: center; height: 32px;">
+                        <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
+                            Result:
+                        </div>
+                        <div role="button"
+                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
+                            <div style="color: rgba(55, 53, 47, 0.6);">{message}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {:else if pluginSelected}
+        <div style="display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 0; font-size: 14px; box-shadow: rgba(55, 53, 47, 0.06) 0px 1px 0px;">
+            <div style="margin-left: 14px; margin-right: 14px; min-width: 0;">
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <div style="display: flex; align-items: center; height: 32px;">
+                        <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
+                            Hint:
+                        </div>
+                        <div role="button"
+                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
+                            <div style="color: rgba(55, 53, 47, 0.6);">{pluginSelected.hint}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/if}
+
     {#if plugins && plugins.length}
         <section style="flex: 1 1 0%; display: flex; flex-direction: column; overflow: auto; height: 100%;">
             {#each plugins as plugin}
