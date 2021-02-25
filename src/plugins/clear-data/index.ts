@@ -4,7 +4,7 @@ const ClearCheckoutPlugin: AdapterPlugin = {
     id: 8,
     title: 'Clear checkout',
     subtitle: 'Clear checkout session',
-    icon: '🤖',
+    icon: '🏒',
     async action({browser}): Promise<string> {
         const tabs = await browser.tabs.query({active: true, currentWindow: true})
         const tab = tabs[0];
