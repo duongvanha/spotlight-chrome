@@ -11,29 +11,31 @@ import type { Context } from "svelte/types/compiler/compile/nodes/shared/Context
 const FindTabsPlugin: AdapterPlugin = {
     id: 5,
     title: 'Change Tab',
-    subtitle: 'Find an open tab and change to it',
-    icon: 'mdi-storefront',
-    hint: 'Open Hive -shop_id (default current page)',
+    subtitle: 'Find an open tab and change tab to it',
+    icon: '🕵',
+    hint: 'Change Tab -shop_id (default current page)',
     async action(): Promise<string> {
         throw new Error("keyword not found")
     },
-    // search(...params): AdapterPlugin[] {
-    //     let allTabs = []
-    //     const allWindows = await browser.windows.getAll({populate: true})
-    //     allWindows.forEach((browserWindow) => {
-    //         allTabs = allTabs.concat(browserWindow.tabs)
-    //     })
-    //
-    //     return allTabs.map((tab) => ({
-    //         title: `Change Tab ${tab.title}`,
-    //         subtitle: tab.url,
-    //         icon: tab.favIconUrl || 'mdi-storefront',
-    //         async action(): Promise<string> {
-    //             switchToTabById(tab.windowId, tab.id)
-    //             return 'do some thing'
-    //         },
-    //     }))
-    // }
+    async search(...params): Promise<AdapterPlugin[]> {
+        let allTabs = []
+        const allWindows = await browser.windows.getAll({populate: true})
+        allWindows.forEach((browserWindow) => {
+            allTabs = allTabs.concat(browserWindow.tabs)
+        })
+
+        return allTabs.map((tab) => ({
+            id: 5,
+            title: `Change Tab`,
+            subtitle: tab.title,
+            icon: '🕵',
+            // hint: tab.
+            async action(): Promise<string> {
+                switchToTabById(tab.windowId, tab.id)
+                return 'do some thing'
+            },
+        }))
+    }
 };
 
 function switchToTabById(windowId, tabId) {

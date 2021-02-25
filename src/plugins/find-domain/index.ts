@@ -6,7 +6,7 @@ const FindDomainPlugin: AdapterPlugin = {
     id: 2,
     title: 'Find domain',
     subtitle: 'Find domain from shop',
-    icon: '🤖',
+    icon: '✈️',
     hint: 'Find domain -shop_id (default current page)',
     async action({browser}, [param, envParams]): Promise<string> {
         let shopId: number;

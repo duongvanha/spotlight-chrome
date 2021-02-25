@@ -31,6 +31,34 @@
   }
 }
 
+.result-message {
+  user-select: none;
+  transition: background 20ms ease-in 0s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  height: 20px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 2px 4px;
+  color: rgba(55, 53, 47, 0.6);
+  margin-right: 1px;
+  font-weight: 500;
+  transform: translateY(0.5px);
+
+  &.success {
+    color: green;
+  }
+
+  &.error {
+    color: red;
+  }
+}
+
 .plugin {
   user-select: none;
   transition: none 0s ease 0s;
@@ -38,17 +66,22 @@
   width: 100%;
   position: relative;
 
-  &.loading:after {
+  .span-icon {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, serif;
+    line-height: 1em;
+  }
+
+  &.selected.loading:after {
     content: '';
     border: 2px solid rgba(55, 53, 47, 0.4);
-    animation: svelte-1rpdrl2-spin 1s linear infinite;
+    animation: spin 1s linear infinite;
     border-top: 2px solid #555;
     border-radius: 50%;
     width: 20px;
     height: 20px;
     position: absolute;
-    right: 9px;
-    top: 9px;
+    right: 14px;
+    top: 14px;
   }
 
   .icon-enter {
@@ -66,7 +99,9 @@
       display: block;
       fill: rgba(55, 53, 47, 0.4);
       flex-shrink: 0;
-      backface-visibility: hidden
+      backface-visibility: hidden;
+      margin-top: 9px;
+      margin-right: 5px;
     }
   }
 

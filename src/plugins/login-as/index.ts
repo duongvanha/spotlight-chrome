@@ -20,6 +20,9 @@ const LoginAsPlugin: AdapterPlugin = {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
+            if(!shopData) {
+                throw new Error('Cannot detect shop info');
+            }
             shopId = parseShopId(shopData.shopId);
         } else {
             shopId = parseShopId(param2)

@@ -7,10 +7,10 @@ import {
 import { parseShopId } from "../../services/Util";
 
 const OpenHivePlugin: AdapterPlugin = {
-    id: 5,
+    id: 6,
     title: 'Open Hive',
     subtitle: 'Open hive store info',
-    icon: '🤖',
+    icon: '👑',
     hint: 'Open Hive -shop_id (default current page)',
     async action({browser}, [param2, envParams]): Promise<string> {
         let shopId: number;

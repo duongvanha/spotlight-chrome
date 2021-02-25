@@ -11,6 +11,18 @@
     suggestionsData.then(state => {
         suggestionService.setState(state);
     }).catch((err) => error = err);
+    let shortCodeOpenExtensions = ['⌘', 'J']
+
+    chrome.runtime.getPlatformInfo(function (info) {
+        switch (info.os) {
+            case 'win':
+                shortCodeOpenExtensions = ['Ctrl', 'J'];
+                break
+            case 'linux':
+                shortCodeOpenExtensions = ['Ctrl', 'M'];
+                break
+        }
+    });
 
     let keyword = '';
     let suggestions: string;
@@ -21,14 +33,16 @@
     let plugins: AdapterPlugin[]
     let pluginSelected = null
 
-    $: {
+    $: changeData(keyword)
+
+    async function changeData(value) {
+        keyword = value
         error = null
         suggestions = suggestionService.get(keyword);
         if (keyword.startsWith(suggestions)) {
             suggestions = ''
         }
-        const keywordSearch = keyword.split('-')
-        plugins = Search(keywordSearch.length > 0 ? keywordSearch[0] : keyword)
+        plugins = await Search(keyword)
         if (plugins.length > 0) {
             pluginSelected = plugins[0]
         } else {
@@ -38,6 +52,7 @@
 
     async function executeCurrent() {
         if (!pluginSelected) return
+        error = null
         message = ''
         loading = true
         try {
@@ -113,9 +128,8 @@
                         <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
                             Error:
                         </div>
-                        <div role="button"
-                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
-                            <div style="color: rgba(55, 53, 47, 0.6);">{error.message}</div>
+                        <div role="button" class="result-message error">
+                            <div>{error.message}</div>
                         </div>
                     </div>
                 </div>
@@ -129,9 +143,8 @@
                         <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
                             Result:
                         </div>
-                        <div role="button"
-                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
-                            <div style="color: rgba(55, 53, 47, 0.6);">{message}</div>
+                        <div role="button" class="result-message success">
+                            <div>{message}</div>
                         </div>
                     </div>
                 </div>
@@ -145,9 +158,8 @@
                         <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
                             Hint:
                         </div>
-                        <div role="button"
-                             style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; height: 20px; border-radius: 3px; font-size: 12px; line-height: 1.2; min-width: 0; padding: 2px 4px; color: rgba(55, 53, 47, 0.6); margin-right: 1px; font-weight: 500; transform: translateY(0.5px);">
-                            <div style="color: rgba(55, 53, 47, 0.6);">{pluginSelected.hint}</div>
+                        <div role="button" class="result-message">
+                            <div>{pluginSelected.hint || ''}</div>
                         </div>
                     </div>
                 </div>
@@ -166,8 +178,7 @@
                                  style="user-select: none; transition: background 20ms ease-in 0s; display: flex; align-items: center; justify-content: center; height: 19px; width: 19px; border-radius: 3px; flex-shrink: 0;">
                                 <div style="display: flex; align-items: center; justify-content: center; height: 19px; width: 19px;">
                                     <div style="height: 17.1px; width: 17.1px; font-size: 17.1px; line-height: 1.1; margin-left: 0px; color: black;">
-                                        <span role="image" aria-label="🏡"
-                                              style="font-family: &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, NotoColorEmoji, &quot;Noto Color Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Android Emoji&quot;, EmojiSymbols; line-height: 1em;">{plugin.icon}</span>
+                                        <span class="span-icon">{plugin.icon}</span>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +193,7 @@
                                 <div style="display: flex; font-size: 12px; color: rgba(55, 53, 47, 0.4); overflow: hidden;">
                                     <div
                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: rgba(55, 53, 47, 0.4);">
-                                        <div contenteditable="true" bind:innerHTML={plugin.textWithMatchedChars}></div>
+                                        <div contenteditable="true" bind:innerHTML={plugin.subtitle}></div>
                                     </div>
                                 </div>
                             </div>
@@ -207,11 +218,11 @@
                                     style="margin-right: 4px; margin-bottom: 1px; font-variant: all-small-caps; font-size: 13.2px; color: rgba(55, 53, 47, 0.6);">↹</span>Complete
                             </li>
                             <li style="display: inline; margin-right: 16px;"><span
-                                    style="margin-right: 4px; margin-bottom: 1px; font-variant: all-small-caps; font-size: 13.2px; color: rgba(55, 53, 47, 0.6);">Enter</span>Excute
+                                    style="margin-right: 4px; margin-bottom: 1px; font-variant: all-small-caps; font-size: 13.2px; color: rgba(55, 53, 47, 0.6);">Enter</span>Execute
                             </li>
                             <li style="display: inline; margin-right: 16px;"><span
-                                    style="font-size: 10.5px; color: rgba(55, 53, 47, 0.6);">⌘</span><span
-                                    style="margin-right: 4px; margin-bottom: 1px; font-variant: all-small-caps; font-size: 13.2px; color: rgba(55, 53, 47, 0.6);">+J</span>Open
+                                    style="font-size: 10.5px; color: rgba(55, 53, 47, 0.6);">{shortCodeOpenExtensions[0]}</span><span
+                                    style="margin-right: 4px; margin-bottom: 1px; font-variant: all-small-caps; font-size: 13.2px; color: rgba(55, 53, 47, 0.6);">+{shortCodeOpenExtensions[1]}</span>Open
                                 extension
                             </li>
                         </ul>
