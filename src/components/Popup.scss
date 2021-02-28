@@ -1,21 +1,25 @@
-@import url("https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css");
-@import url("https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css");
+.input-search {
+  font-size: inherit;
+  line-height: inherit;
+  border: none;
+  background: none;
+  width: 100%;
+  display: block;
+  resize: none;
+  padding: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  outline: none;
+  z-index: 2;
 
-:root {
-  --app-background-color: #FFFFFF;
-  --search-input-caret-color: #222222;
-  --search-results-scrollbar-color: #222222;
-  --selected-suggestion-background-color: #222222;
-  --search-input-value-text-size: 30px;
-  --suggestion-title-text-size: 16px;
-  --suggestion-subtitle-text-size: 13px;
-  --search-input-value-text-color: #222222;
-  --selected-suggestion-title-text-color: #FFFFFF;
-  --selected-suggestion-subtitle-text-color: #FFFFFF;
-  --selected-suggestion-character-match-color: #FFFFFF;
-  --suggestion-title-text-color: #222222;
-  --suggestion-subtitle-text-color: #222222;
-  --suggestion-character-match-color: #222222;
+  &.suggestion {
+    position: absolute;
+    left: 44px;
+    opacity: 0.4;
+    z-index: 1;
+  }
 }
 
 @keyframes spin {
@@ -27,159 +31,85 @@
   }
 }
 
-.cLauncher {
-  background: var(--app-background-color);
-  min-height: 60px;
-  width: var(--app-width-size);
-}
-
-.cLauncher .cLauncher__search {
-  position: relative;
-  z-index: 2;
-  background-color: transparent;
-  caret-color: var(--search-input-caret-color);
-  border: none;
-  color: var(--search-input-value-text-color);
-  height: 50px;
-  font-size: var(--search-input-value-text-size);
-  font-weight: 300;
-  width: 485px;
-  padding: 5px 5px 5px 15px;
-}
-
-.cLauncher .cLauncher__search:focus {
-  outline: none;
-}
-
-.cLauncher .cLauncher__icon {
-  margin-top: 5px;
-}
-
-.cLauncher .cLauncher__search-wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  position: relative;
-
-  .suggestion {
-    background-color: var(--app-background-color);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    opacity: 0.5;
-  }
-}
-
-.cLauncher .cLauncher__suggestions {
-  max-height: 255px;
-  margin: 0;
-  background: var(--app-background-color);
-  overflow-y: scroll;
-  padding: 0;
-  display: inline;
-}
-
-.cLauncher .cLauncher__hint {
-  padding: 0 5px 5px 15px;
-
-  p {
-    margin: 0;
-    padding: 0;
-
-    &.error {
-      color: red;
-    }
-
-    &.result {
-      color: blue;
-    }
-
-    &.hint {
-      color: #79827a;
-    }
-  }
-}
-
-.cLauncher .cLauncher__scrollbar::-webkit-scrollbar-thumb {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: var(--search-results-scrollbar-color);
-}
-
-.cLauncher .cLauncher__suggestion {
-  display: flex;
+.result-message {
+  user-select: none;
+  transition: background 20ms ease-in 0s;
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
-  padding: 0 10px;
-  border-top: 1px solid;
-  list-style: none;
-  height: 60px;
-}
+  flex-shrink: 0;
+  white-space: nowrap;
+  height: 20px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 2px 4px;
+  color: rgba(55, 53, 47, 0.6);
+  margin-right: 1px;
+  font-weight: 500;
+  transform: translateY(0.5px);
 
-.cLauncher .cLauncher__suggestion.selected {
-  background-color: var(--selected-suggestion-background-color);
-}
+  &.success {
+    color: green;
+  }
 
-.cLauncher .cLauncher__suggestion.selected {
-  .cLauncher__suggestion-title, .cLauncher__suggestion-subtitle, strong, .cLauncher__suggestion-icon {
-    color: var(--selected-suggestion-title-text-color);
+  &.error {
+    color: red;
   }
 }
 
-.cLauncher .cLauncher__suggestion.loading:after {
-  content: '';
-  border: 2px solid #f3f3f3;
-  animation: spin 1s linear infinite;
-  border-top: 3px solid #555;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: 30px;
-}
+.plugin {
+  user-select: none;
+  transition: none 0s ease 0s;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
 
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-icon {
-  font-size: 30px;
-  margin-right: 10px;
-}
+  .span-icon {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, serif;
+    line-height: 1em;
+  }
 
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-text-info {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-}
+  &.selected.loading:after {
+    content: '';
+    border: 2px solid rgba(55, 53, 47, 0.4);
+    animation: spin 1s linear infinite;
+    border-top: 2px solid #555;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+  }
 
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-title {
-  color: var(--suggestion-title-text-color);
-  font-size: var(--suggestion-title-text-size);
-  margin-bottom: 2px;
-}
+  .icon-enter {
+    margin-left: auto;
+    margin-right: 14px;
+    min-width: 0;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin-top: 3px;
 
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-subtitle {
-  color: var(--suggestion-subtitle-text-color);
-  font-size: var(--suggestion-subtitle-text-size);
-}
+    & > svg {
+      opacity: 0;
+      width: 14px;
+      height: 14px;
+      display: block;
+      fill: rgba(55, 53, 47, 0.4);
+      flex-shrink: 0;
+      backface-visibility: hidden;
+      margin-top: 9px;
+      margin-right: 5px;
+    }
+  }
 
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-subtitle,
-.cLauncher .cLauncher__suggestion .cLauncher__suggestion-title {
-  max-width: 400px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  &.selected {
+    background: rgba(55, 53, 47, 0.08);
+  }
 
-.cLauncher .cLauncher__suggestion strong {
-  font-weight: bold;
-  color: var(--suggestion-character-match-color);
-}
-
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-:root {
-  --app-width-size: 500px;
+  &.selected:not(.loading) .icon-enter > svg {
+    opacity: 1;
+  }
 }

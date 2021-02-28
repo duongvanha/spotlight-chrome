@@ -11,6 +11,7 @@ type AdapterPlugin = {
 
     action(ctx: Context, params: string[]): Promise<string>,
     background?(),
+    search?(...params: string[]): Promise<AdapterPlugin[]>,
 }
 
 export default AdapterPlugin;

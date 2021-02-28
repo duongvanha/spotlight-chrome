@@ -14,12 +14,15 @@ const LoginAsPlugin: AdapterPlugin = {
     id: 1,
     title: 'Login as',
     subtitle: 'Login as current shop',
-    icon: 'mdi-login',
+    icon: '🦸',
     hint: 'Login as -reason -shop_id (default current page)',
     async action({browser}, [reason, param2, envParams]): Promise<string> {
         let shopId: number;
         if (!param2) {
             const shopData = await shopBaseInfo();
+            if(!shopData) {
+                throw new Error('Cannot detect shop info');
+            }
             shopId = parseShopId(shopData.shopId);
         } else {
             shopId = parseShopId(param2)
