@@ -16,7 +16,7 @@
     chrome.runtime.getPlatformInfo(function (info) {
         switch (info.os) {
             case 'win':
-                shortCodeOpenExtensions = ['Ctrl', 'J'];
+                shortCodeOpenExtensions = ['Ctrl', 'M'];
                 break
             case 'linux':
                 shortCodeOpenExtensions = ['Ctrl', 'M'];
