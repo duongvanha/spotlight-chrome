@@ -14,7 +14,7 @@ const CopyShopIdPlugin: AdapterPlugin = {
 
         copyToClipboard(shopData.shopId)
 
-        return `${shopData.shopId}`
+        return `copied ${shopData.shopId} to clipboard`
     },
 };
 

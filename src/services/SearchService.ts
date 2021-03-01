@@ -4,7 +4,8 @@ import type AdapterPlugin from '../plugins/interface';
 import plugins from "../plugins";
 
 
-async function Search(keyword: string): Promise<AdapterPlugin[]> {
+export default async function Search(keyword: string): Promise<AdapterPlugin[]> {
+    if (keyword === ' ') return plugins
     const [keywordSearch, ...params] = keyword.split('-')
     const pluginMatched = fuzzaldrinPlus
         .filter(plugins, keywordSearch, {key: 'subtitle', maxResults: 20})
@@ -18,5 +19,3 @@ async function Search(keyword: string): Promise<AdapterPlugin[]> {
 
     return pluginMatched
 }
-
-export default Search

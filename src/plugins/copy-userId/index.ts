@@ -18,7 +18,7 @@ const CopyUserIdPlugin: AdapterPlugin = {
 
         copyToClipboard(userId)
 
-        return `${userId}`
+        return `copied ${userId} to clipboard`
     },
 };
 
