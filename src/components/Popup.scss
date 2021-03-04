@@ -34,7 +34,7 @@
 .result-message {
   user-select: none;
   transition: background 20ms ease-in 0s;
-  cursor: pointer;
+  cursor: not-allowed;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -62,7 +62,7 @@
 .plugin {
   user-select: none;
   transition: none 0s ease 0s;
-  cursor: pointer;
+  cursor: not-allowed;
   width: 100%;
   position: relative;
 

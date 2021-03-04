@@ -13,6 +13,10 @@ export async function setCache(key, value) {
     return value
 }
 
+export function base64Encode(val) {
+    return btoa(encodeURI(val))
+}
+
 export function parseShopId(shopId: any): number {
     return Number(shopId.toString().replaceAll(',',''))
 }

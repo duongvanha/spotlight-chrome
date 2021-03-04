@@ -3,7 +3,7 @@
   "name": "spotlight",
   "description": "Spotlight search for chrome",
   "homepage_url": "https://github.com/duongvanha/spotlight-chrome",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "icons": {
     "16": "icons/spotlight-logo16.png",
     "48": "icons/spotlight-logo48.png",
@@ -49,7 +49,7 @@
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "windows": "Ctrl+J",
+        "windows": "Ctrl+M",
         "mac": "Command+J",
         "chromeos": "Ctrl+M",
         "linux": "Ctrl+M"

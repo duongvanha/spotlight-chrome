@@ -5,7 +5,10 @@ export type ShopBaseStorage = {
     productId: number
     host: string,
     userId: number,
-    env: Env
+    env: Env,
+    accessToken: string,
+    userInfo: object,
+    email: string
 }
 
 function detectEnv(): Env {
@@ -44,13 +47,21 @@ if (window?.__INITIAL_STATE__?.bootstrap?.shopId) {
 // @ts-ignore
 if (window?.app?.__vue__?.$store?.state?.shop) {
     isShopBase = true
+
+    const userInfo = null
+    try {
+        JSON.parse(decodeURI(atob(JSON.parse(window.localStorage['sbase_auth']))))
+    }catch (e) {}
     // @ts-ignore
     const state = window.app.__vue__.$store.state
     objData = Object.assign({
         host: window.location.host,
         shopId: state.shop.shop.id,
         userId: state.shop.shop.user_id,
-        env: detectEnv()
+        env: detectEnv(),
+        accessToken: JSON.parse(window.localStorage['sbase_shop-access-token']),
+        userInfo: userInfo,
+        email: state.shop.shop.email
     }, objData)
 }
 

@@ -22,9 +22,9 @@ const FindDomainPlugin: AdapterPlugin = {
         let env = await detectEnv(envParams)
         const shopInfo = await getShopBaseInfo(shopId, env);
 
-        copyToClipboard(shopInfo.publicDomain)
+        copyToClipboard(shopInfo.shopBaseDomain)
 
-        return `${shopInfo.publicDomain}\n${shopInfo.shopBaseDomain}`
+        return `${shopInfo.publicDomain} ${shopInfo.shopBaseDomain}`
     },
 };
 

@@ -92,7 +92,7 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     if (lastIndexUrlLogin !== -1) {
         const domain = shopRes.request.responseURL.substr(0, lastIndexUrlLogin)
         await browser.tabs.create({url: `${domain}/connect/google`, active: false});
-        return null
+        throw new Error('Invalid permissions, please login in the next tab and try again');
     }
 
     let publicDomainRex = regexPublicDomain.exec(shopRes.data)
@@ -100,7 +100,7 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
         throw new Error('Cannot detect public domain');
     }
     let ownerIdRex = regexOwnerId.exec(shopRes.data)
-    if (!ownerIdRex || !ownerIdRex[1]) {
+    if (!ownerIdRex || !ownerIdRex[1] || +ownerIdRex[1] === 0) {
         throw Error('Cannot detect owner id');
     }
     let shopBaseDomainRex = regexShopBaseDomain.exec(shopRes.data)
