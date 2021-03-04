@@ -156,7 +156,7 @@
                 <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <div style="display: flex; align-items: center; height: 32px;">
                         <div style="margin-right: 2px; color: rgba(55, 53, 47, 0.4); font-size: 12px; transform: translateY(0.5px);">
-                            Hint:
+                            Usage:
                         </div>
                         <div role="button" class="result-message">
                             <div>{pluginSelected.hint || ''}</div>

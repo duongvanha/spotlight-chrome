@@ -52,8 +52,8 @@ const LoginAsPlugin: AdapterPlugin = {
         const lastIndexUrlLogin = res.request.responseURL.lastIndexOf('/admin/login')
         if (lastIndexUrlLogin !== -1) {
             const domain = res.request.responseURL.substr(0, lastIndexUrlLogin)
-            await browser.tabs.create({url: `${domain}/connect/google`});
-            return ''
+            await browser.tabs.create({url: `${domain}/connect/google`, active: false});
+            throw new Error('Invalid permissions, please login in the next tab and try again');
         }
 
         browser.tabs.create({url: res.request.responseURL + 'spotlight=' + LoginAsPlugin.id});
