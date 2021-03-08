@@ -87,7 +87,7 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     if (lastIndexUrlLogin !== -1) {
         const domain = shopRes.request.responseURL.substr(0, lastIndexUrlLogin)
         await browser.tabs.create({url: `${domain}/connect/google`, active: false});
-        throw new Error('Invalid permissions, please login in the next tab and try again');
+        throw new Error('Invalid permission, please login in the next tab and try again');
     }
 
     let publicDomainRex = regexPublicDomain.exec(shopRes.data)
