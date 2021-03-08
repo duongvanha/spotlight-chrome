@@ -1,3 +1,5 @@
+import { browser } from "webextension-polyfill-ts";
+
 export function copyToClipboard(value) {
     document.addEventListener('copy', (event) => {
         // Prevents the default behavior of copying, ex: pressing Ctrl+C
@@ -13,12 +15,30 @@ export async function setCache(key, value) {
     return value
 }
 
+export function executeScript(code: string, fun: Function) {
+    return browser.tabs
+        .query({active: true, currentWindow: true})
+        .then(([currentTab]) => {
+                if (browser.tabs.executeScript) {
+                    return browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}).then(([item]) => item)
+                }
+                return new Promise((resolve, _reject) => {
+                    // @ts-ignore
+                    return chrome.scripting.executeScript({
+                        target: {tabId: currentTab.id},
+                        function: fun
+                    }, (info) => resolve(info[0].result))
+                })
+            }
+        ).then((stateString) => JSON.parse(stateString))
+}
+
 export function base64Encode(val) {
     return btoa(encodeURI(val))
 }
 
 export function parseShopId(shopId: any): number {
-    return Number(shopId.toString().replaceAll(',',''))
+    return Number(shopId.toString().replaceAll(',', ''))
 }
 
 export async function keepSession(key) {

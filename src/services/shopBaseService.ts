@@ -2,7 +2,7 @@ import { browser } from 'webextension-polyfill-ts';
 import axios from 'axios';
 import type { ShopBaseStorage } from '../window';
 import { Env } from '../types';
-import { getCache, keepSession, setCache } from "./Util";
+import { executeScript, getCache, keepSession, setCache } from "./Util";
 
 let shopBaseInfoCache = null
 
@@ -35,17 +35,12 @@ const regexShopBaseDomain = /.*<th>Domain<\/th>\n<td>(.*)<\/td>.*/
 
 function shopBaseInfo(): Promise<ShopBaseStorage> {
     if (shopBaseInfoCache) return shopBaseInfoCache
-    return browser.tabs
-        .query({active: true, currentWindow: true})
-        .then(([currentTab]) =>
-            browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
-        ).then(([stateString]) => JSON.parse(stateString))
-        .then((info) => {
-            shopBaseInfoCache = info
-            return info
-        }).catch(err => {
-            console.log('shopBaseInfo', err.message);
-        })
+    return executeScript(`localStorage['spotlight-ext-sbase']`, () => localStorage['spotlight-ext-sbase']).then((info) => {
+        shopBaseInfoCache = info
+        return info
+    }).catch(err => {
+        console.log('shopBaseInfo', err.message);
+    })
 }
 
 async function sessIDHive(env) {
@@ -121,16 +116,4 @@ async function getShopBaseInfo(shopId: number, env): Promise<ShopInfo> {
     return shopInfo
 }
 
-function injectScript(file, node) {
-    const th = document.getElementsByTagName(node)[0];
-    const scriptElement = document.createElement('script');
-    scriptElement.setAttribute('type', 'text/javascript');
-    scriptElement.setAttribute('src', file);
-    th.appendChild(scriptElement);
-}
-
-function backgroundFunction() {
-    injectScript(chrome.runtime.getURL('window.js'), 'body');
-}
-
-export { shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo };
+export { shopBaseInfo, sessIDHive, getShopBaseInfo };
