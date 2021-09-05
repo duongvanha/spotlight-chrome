@@ -8,7 +8,10 @@ const ClearCheckoutPlugin: AdapterPlugin = {
     async action({browser}): Promise<string> {
         const tabs = await browser.tabs.query({active: true, currentWindow: true})
         const tab = tabs[0];
-        browser.tabs.executeScript(tab.id, {code: `localStorage.removeItem('shop/carts/current-checkout-token')`})
+        browser.scripting.executeScript({
+            func: () => localStorage.removeItem('shop/carts/current-checkout-token'),
+            target: {tabId: tab.id}
+        })
         const url = new URL(tab.url);
         const domain = url.origin + '/collections/all'
         chrome.tabs.update(tab.id, {url: domain});

@@ -32,9 +32,7 @@
 }
 
 .result-message {
-  user-select: none;
   transition: background 20ms ease-in 0s;
-  cursor: not-allowed;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;

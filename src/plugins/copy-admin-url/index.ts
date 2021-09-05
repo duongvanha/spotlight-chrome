@@ -18,7 +18,6 @@ const ShareAdminUrlPlugin: AdapterPlugin = {
         const tabs = await browser.tabs.query({active: true, currentWindow: true})
         const tab = tabs[0];
         const url = new URL(tab.url);
-        console.log(url, shopData.accessToken);
         url.searchParams.append('access_token', shopData.accessToken);
         url.searchParams.append('scopes', base64Encode(JSON.stringify(["admin/*"])));
         url.searchParams.append('shop_data', base64Encode(

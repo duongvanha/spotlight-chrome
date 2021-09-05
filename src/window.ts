@@ -44,6 +44,21 @@ if (window?.__INITIAL_STATE__?.bootstrap?.shopId) {
         env: detectEnv()
     }, objData)
 }
+
+
+// @ts-ignore
+if (window?.__INITIAL_STATE__?.shop?.id) {
+    isShopBase = true
+    // @ts-ignore
+    const state = window.__INITIAL_STATE__
+    objData = Object.assign({
+        host: window.location.host,
+        shopId: state.shop.id,
+        productId: state.product?.product.id,
+        env: detectEnv(),
+    }, objData)
+}
+
 // @ts-ignore
 if (window?.app?.__vue__?.$store?.state?.shop) {
     isShopBase = true

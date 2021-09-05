@@ -33,13 +33,16 @@ const regexPublicDomain = /.*<th>Public Domain<\/th>\n<td>(.*)<\/td>.*/
 const regexShopBaseDomain = /.*<th>Domain<\/th>\n<td>(.*)<\/td>.*/
 
 
-function shopBaseInfo(): Promise<ShopBaseStorage> {
+function shopBaseInfo(): Promise<ShopBaseStorage | any> {
     if (shopBaseInfoCache) return shopBaseInfoCache
     return browser.tabs
         .query({active: true, currentWindow: true})
         .then(([currentTab]) =>
-            browser.tabs.executeScript(currentTab.id, {code: `localStorage['spotlight-ext-sbase']`}),
-        ).then(([stateString]) => JSON.parse(stateString))
+            browser.scripting.executeScript({
+                func: () => localStorage['spotlight-ext-sbase'],
+                target: {tabId: currentTab.id}
+            }),
+        ).then((rs) => JSON.parse(rs[0].result))
         .then((info) => {
             shopBaseInfoCache = info
             return info
@@ -133,4 +136,4 @@ function backgroundFunction() {
     injectScript(chrome.runtime.getURL('window.js'), 'body');
 }
 
-export { shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo };
+export {shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo};

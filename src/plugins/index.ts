@@ -6,6 +6,7 @@ import OpenHivePlugin from './open-hive';
 import CollectionAllPlugin from './collection-all';
 import ClearCheckoutPlugin from "./clear-data";
 import ShareAdminUrlPlugin from "./copy-admin-url";
+import SpayInfoPlugin from "./check-shopbase-payment";
 
 const plugins = [
     LoginAsPlugin,
@@ -16,6 +17,7 @@ const plugins = [
     CollectionAllPlugin,
     ClearCheckoutPlugin,
     ShareAdminUrlPlugin,
+    SpayInfoPlugin
 ];
 
 export default plugins;
