@@ -37,12 +37,8 @@ function shopBaseInfo(): Promise<ShopBaseStorage | any> {
     if (shopBaseInfoCache) return shopBaseInfoCache
     return browser.tabs
         .query({active: true, currentWindow: true})
-        .then(([currentTab]) =>
-            browser.scripting.executeScript({
-                func: () => localStorage['spotlight-ext-sbase'],
-                target: {tabId: currentTab.id}
-            }),
-        ).then((rs) => JSON.parse(rs[0].result))
+        .then(([currentTab]): Promise<any> => executeScript(currentTab.id, () => localStorage['spotlight-ext-sbase']))
+        .then(([stateString]) => JSON.parse(stateString.result))
         .then((info) => {
             shopBaseInfoCache = info
             return info
@@ -51,7 +47,23 @@ function shopBaseInfo(): Promise<ShopBaseStorage | any> {
         })
 }
 
-async function sessIDHive(env) {
+function executeScript(tabId, cb) {
+    try {
+        return browser.scripting.executeScript({
+            // @ts-ignore
+            func: cb,
+            target: {tabId}
+        })
+    } catch (e) {
+        return browser.scripting.executeScript({
+            // @ts-ignore
+            function: cb,
+            target: {tabId}
+        })
+    }
+}
+
+function sessIDHive(env) {
     return browser.cookies.get({
         url: mapHiveEnv[env],
         name: 'PHPSESSID',
@@ -136,4 +148,4 @@ function backgroundFunction() {
     injectScript(chrome.runtime.getURL('window.js'), 'body');
 }
 
-export {shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo};
+export {shopBaseInfo, sessIDHive, backgroundFunction, getShopBaseInfo, executeScript};
