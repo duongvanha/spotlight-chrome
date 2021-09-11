@@ -1,12 +1,5 @@
 import type AdapterPlugin from '../interface';
-import {
-    detectEnv,
-    mapHiveEnv,
-    shopBaseInfo
-} from '../../services/shopBaseService';
-import { parseShopId } from "../../services/Util";
-import { browser } from "webextension-polyfill-ts";
-import type { Context } from "svelte/types/compiler/compile/nodes/shared/Context";
+import { browser } from 'webextension-polyfill-ts';
 
 const FindTabsPlugin: AdapterPlugin = {
     id: 5,
@@ -17,7 +10,7 @@ const FindTabsPlugin: AdapterPlugin = {
     async action(): Promise<string> {
         throw new Error("keyword not found")
     },
-    async search(...params): Promise<AdapterPlugin[]> {
+    async search(): Promise<AdapterPlugin[]> {
         let allTabs = []
         const allWindows = await browser.windows.getAll({populate: true})
         allWindows.forEach((browserWindow) => {

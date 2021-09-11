@@ -5,7 +5,6 @@ import {
     detectEnv,
     getShopBaseInfo,
     mapHiveEnv,
-    sessIDHive,
     shopBaseInfo
 } from '../../services/shopBaseService';
 import { parseShopId } from "../../services/Util";
@@ -18,8 +17,8 @@ const LoginAsPlugin: AdapterPlugin = {
     hint: 'Login as -reason -shop_id (default current page)',
     async action({browser}, [reason, param2, envParams]): Promise<string> {
         let shopId: number;
+        const shopData = await shopBaseInfo();
         if (!param2) {
-            const shopData = await shopBaseInfo();
             if(!shopData) {
                 throw new Error('Cannot detect shop info');
             }
@@ -34,19 +33,12 @@ const LoginAsPlugin: AdapterPlugin = {
 
         let env = await detectEnv(envParams)
 
-        const sess = await sessIDHive(env);
-
         const shopInfo = await getShopBaseInfo(shopId, env)
 
         const linkHive = mapHiveEnv[env];
 
         const res = await axios.post(`${linkHive}/admin/app/shopuser/${shopInfo.ownerId}/login`, querystring.stringify({
             reason,
-        }, {
-            headers: {
-                Cookie: `PHPSESSID=${sess}`,
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
         }));
 
         const lastIndexUrlLogin = res.request.responseURL.lastIndexOf('/admin/login')
@@ -56,7 +48,7 @@ const LoginAsPlugin: AdapterPlugin = {
             throw new Error('Invalid permissions, please login in the next tab and try again');
         }
 
-        browser.tabs.create({url: res.request.responseURL + 'spotlight=' + LoginAsPlugin.id});
+        browser.tabs.create({url: `${res.request.responseURL}spotlight=${LoginAsPlugin.id}&shop=${shopData.host}`});
         return '';
     },
 };

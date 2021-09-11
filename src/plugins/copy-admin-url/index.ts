@@ -1,8 +1,6 @@
 import type AdapterPlugin from '../interface';
 import { shopBaseInfo } from '../../services/shopBaseService';
-import { base64Encode, copyToClipboard } from "../../services/Util";
-
-
+import { base64Encode, copyToClipboard } from '../../services/Util';
 
 const ShareAdminUrlPlugin: AdapterPlugin = {
     id: 9,

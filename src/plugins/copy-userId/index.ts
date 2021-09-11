@@ -1,6 +1,6 @@
 import type AdapterPlugin from '../interface';
-import { getShopBaseInfo, shopBaseInfo } from "../../services/shopBaseService";
-import { copyToClipboard } from "../../services/Util";
+import { getShopBaseInfo, shopBaseInfo } from '../../services/shopBaseService';
+import { copyToClipboard } from '../../services/Util';
 
 const CopyUserIdPlugin: AdapterPlugin = {
     id: 4,

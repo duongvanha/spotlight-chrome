@@ -1,9 +1,9 @@
 import type AdapterPlugin from '../interface';
-import {copyToClipboard, getCache, setCache} from "../../services/Util";
+import { copyToClipboard, getCache, setCache } from '../../services/Util';
 import type {ShopBaseStorage} from "../../window";
 import { shopBaseInfo } from '../../services/shopBaseService';
-import { parseShopId } from "../../services/Util";
-import axios from "axios";
+import { parseShopId } from '../../services/Util';
+import axios from 'axios';
 
 const SpayInfo: AdapterPlugin = {
     id: 7,
@@ -11,7 +11,7 @@ const SpayInfo: AdapterPlugin = {
     subtitle: 'Check Shopbase Payment Info',
     icon: '🦁',
     hint: 'SPay Info -shop_id (default current page)',
-    async action({browser}, [param2, envParams]): Promise<string> {
+    async action({browser}, [param2]): Promise<string> {
         let shopId: number;
         let shopData: ShopBaseStorage;
         if (!param2) {
@@ -57,7 +57,12 @@ const SpayInfo: AdapterPlugin = {
             copyToClipboard(cacheShopPaymentInfo.gateway_account_id)
         }
 
-        return `Account ${cacheShopPaymentInfo.gateway_account_id} using gateway ${cacheShopPaymentInfo.gateway}`
+        if (cacheShopPaymentInfo.gateway_account_id) {
+
+            return `Account ${cacheShopPaymentInfo.gateway_account_id} using gateway ${cacheShopPaymentInfo.gateway}`
+        }
+
+        return `Account ${cacheShopPaymentInfo.rs_id} using gateway ${cacheShopPaymentInfo.gateway}`
     },
 };
 

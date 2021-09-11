@@ -1,20 +1,26 @@
 import type AdapterPlugin from '../interface';
-import { detectEnv, getShopBaseInfo, shopBaseInfo } from "../../services/shopBaseService";
-import { copyToClipboard, parseShopId } from "../../services/Util";
+import { detectEnv, getShopBaseInfo, shopBaseInfo } from '../../services/shopBaseService';
+import { copyToClipboard, parseShopId } from '../../services/Util';
 
 const FindDomainPlugin: AdapterPlugin = {
     id: 2,
     title: 'Find domain',
     subtitle: 'Find domain from shop',
     icon: '✈️',
-    hint: 'Find domain -shop_id (default current page)',
-    async action({browser}, [param, envParams]): Promise<string> {
+    hint: 'Find domain -isPublishDomain (1 or 0) -shop (default current page)',
+    async action({browser}, [pub, param, envParams]): Promise<string> {
         let shopId: number;
+        const shopData = await shopBaseInfo();
+
         if (!param) {
-            const shopData = await shopBaseInfo();
             shopId = parseShopId(shopData.shopId);
         } else {
             shopId = parseShopId(param)
+        }
+
+        if (pub !== '1') {
+            copyToClipboard(shopData.shopBaseDomain)
+            return `${shopData.shopBaseDomain}`
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');
