@@ -19,8 +19,8 @@ const FindDomainPlugin: AdapterPlugin = {
         }
 
         if (pub !== '1') {
-            copyToClipboard(shopData.shopBaseDomain)
-            return `${shopData.shopBaseDomain}`
+            copyToClipboard("https://"+shopData.host)
+            return `https://${shopData.host}`
         }
 
         if (!shopId) throw new Error('Cannot detect shop id');
